@@ -1,0 +1,21 @@
+= Install
+No build tools (thank goodness)
+
+== Requires
+Python3, GTK environment, YUI compressor
+
+== Get the compressor and put it somewhere sensible.
+
+== Install the GSettings schema
+
+== Change internal settings
+Look in the script. All settings are annotated.
+
+Mostly, you need to point the compressor at the YUI jar, and target some CSS/JS file folders.
+
+== Run
+From a terminal,
+ 
+./Minifier
+
+Select files, then minify.

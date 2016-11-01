@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="gsettings-desktop-schemas">
+  <schema path="/uk/co/archaicgroves/backuper/" id="uk.co.archaicgroves.backuper">
+    <!-- a(backupName, srcPath, bckPath, a(index, date, time, pointName, restoredFrom)) -->
+    <key type="a(sssa(isssi))" name="rollback-points">
+      <default>[]</default>
+      <summary>Current selection of JS files</summary>
+      <description>Selection of JS files when last used.</description>
+    </key>
+  </schema>
+</schemalist>
