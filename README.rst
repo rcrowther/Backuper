@@ -23,3 +23,6 @@ Requires
 ~~~~~~~~
 Python3, GTK environment, 'rdiff-backup', and some setup. Instructions included.
 
+Build
+~~~~~
+Meson
