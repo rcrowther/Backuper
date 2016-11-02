@@ -1,21 +1,14 @@
 = Install
-No build tools (thank goodness)
 
 == Requires
-Python3, GTK environment, YUI compressor
+Python3, GTK environment, rdiff-backup
 
-== Get the compressor and put it somewhere sensible.
 
-== Install the GSettings schema
 
-== Change internal settings
-Look in the script. All settings are annotated.
+== Meson
+cd .../Backuper
+mkdir build
+/usr/local/bin/meson.py build
+cd build
+sudo ninja schema-install
 
-Mostly, you need to point the compressor at the YUI jar, and target some CSS/JS file folders.
-
-== Run
-From a terminal,
- 
-./Minifier
-
-Select files, then minify.

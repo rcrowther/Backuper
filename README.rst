@@ -9,7 +9,7 @@ Made for several mirrors, but currently only capable of one.
     :alt: Backuper screenshot
     :align: center
 
-    The commandline ain't easy, either
+    (the commandline ain't easy, either)
 
 This interface was difficult to write, is waiting for a repository
 upgrade to rdiff-backup, and incomplete. It only handles one folder
