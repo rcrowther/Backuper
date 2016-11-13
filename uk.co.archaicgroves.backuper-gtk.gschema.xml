@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="gsettings-desktop-schemas">
+  <schema path="/uk/co/archaicgroves/backuper-gtk/" id="uk.co.archaicgroves.backuper-gtk">
+    <!-- a(backupName, srcPath, bckPath, a(index, date, time, pointName, restoredFrom)) -->
+    <key type="a(sssa(isssi))" name="data">
+      <default>[]</default>
+      <summary>Data for each project</summary>
+      <description>Data, such as paths and savepoints, for each project.</description>
+    </key>
+  </schema>
+</schemalist>

@@ -50,18 +50,20 @@ all savepoints and start again. Or establish a new backup.
 #success#
 
 ## TODO
+# protext against shared filepaths
 # Really needs the custom column renderer
 # Make mirror path to labels, add file browsers?
 # zero increments, hide load button
 # recover from increment not matching settings error by listing increments existing
 # detect settings from existing mirror (tough)
 # does 'sort' sort the model?
+# needs Filecooser for 'sourcePath'
 # activate 'enter' on savepoint name
-
+# 
 #2001-07-15T04:09:38-07:00
 
-GSCHEMA = "uk.co.archaicgroves.backuper"
-GROUP_DATA_KEY = 'rollback-points'
+GSCHEMA = "uk.co.archaicgroves.backuper-gtk"
+GROUP_DATA_KEY = 'data'
 # a(backupName, src, bck, last_index a(index, date, time, pointName, restoreFrom))
 GROUP_SIGNATURE = "a(sssa(isssi))"
 
@@ -376,12 +378,8 @@ class MyWindow(Gtk.Window):
         return prev
         
     def _settingsFromPopulation(self):
-                #gvar = GLib.Variant("a(sssa{ss})",
-           #[('IPMonitorTest', '/home/rob/Desktop/IPbackup', '/home/rob/Desktop/backup',
-          #{"2/5/77": "pre-cambrian", "2/10/2016": "Debian update"}
-          #)]
-          #)
-        backupName = self.backups.get_active_text()
+        bName = self.backups.get_active_text()
+        backupName = bName if (bName) else 'default'
         srcPath = self.sourcePath.get_text()
         bckPath = self.backupPath.get_text()
         # (manual. Comprehensions and the like generate views, not the object)
@@ -463,7 +461,12 @@ class MyWindow(Gtk.Window):
         
 
     ## Actions
-    
+
+    def _notebookSwitched(self, notebook, page, pageNum):
+        # clear status
+        self.clearStatus()
+        
+        
     def _newMirror(self, widget):
         #print("toDO")
         self.clearStatus()
@@ -720,7 +723,9 @@ class MyWindow(Gtk.Window):
                 (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                  "Select", Gtk.ResponseType.OK))
             dialog.set_default_size(800, 400)
-    
+                # contrary to GTK3 advice
+            dialog.set_current_folder(self.backupPath.get_text())
+            
             response = dialog.run()
             if response == Gtk.ResponseType.OK:
                 path = dialog.get_filename()
@@ -732,36 +737,8 @@ class MyWindow(Gtk.Window):
     
             dialog.destroy()
 
-    def settingsPage(self):
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        box.set_homogeneous(False)
-        
-        srcLabel = Gtk.Label()
-        srcLabel.set_markup ("<b>Source path</b>")
-        srcLabel.set_halign(Gtk.Align.START)  
-        box.pack_start(srcLabel, False, True, 0)
 
-        self.sourcePath = Gtk.Entry()
-        self.sourcePath.set_margin_bottom(8)
-        box.pack_start(self.sourcePath, False, True, 0)
-        
-        
-        dstLabel = Gtk.Label()
-        dstLabel.set_markup ("<b>Backup folder path</b>")
-        dstLabel.set_halign(Gtk.Align.START)
-        box.pack_start(dstLabel, False, True, 0)
-        selectMirrorbutton = Gtk.Button(label="Select backup folder")
-        selectMirrorbutton.connect("clicked", self._selectMirrorFolder)
-        box.pack_start(selectMirrorbutton, False, True, 0)
-
-
-        self.backupPath = Gtk.Label()
-        box.pack_start(self.backupPath, False, True, 0)
-
-        return box
-        
     def actionPage(self):
-        #Gtk.Window.__init__(self, title="Backuper")
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         box.set_homogeneous(False)
 
@@ -837,7 +814,37 @@ class MyWindow(Gtk.Window):
         
         return box
         
+    def settingsPage(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        box.set_homogeneous(False)
+        
+        label = Gtk.Label()
+        label.set_markup ("<b>Source path</b>")
+        label.set_halign(Gtk.Align.START)  
+        box.pack_start(label, False, True, 0)
 
+        self.sourcePath = Gtk.Entry()
+        self.sourcePath.set_margin_bottom(8)
+        box.pack_start(self.sourcePath, False, True, 0)
+        
+        
+        label = Gtk.Label()
+        label.set_markup ("<b>Backup folder path</b>")
+        label.set_halign(Gtk.Align.START)
+
+        box.pack_start(label, False, True, 0)
+        selectMirrorbutton = Gtk.Button(label="Select backup folder")
+        selectMirrorbutton.connect("clicked", self._selectMirrorFolder)
+        box.pack_start(selectMirrorbutton, False, True, 0)
+
+
+        self.backupPath = Gtk.Entry()
+        self.backupPath.set_editable(False)
+        self.backupPath.set_margin_bottom(8)
+        box.pack_start(self.backupPath, False, True, 0)
+
+        return box
+        
     
     def __init__(self):
         Gtk.Window.__init__(self, title="Backuper")
@@ -852,8 +859,8 @@ class MyWindow(Gtk.Window):
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.add(box)
 
-        srcLabel = Gtk.Label("Mirror:")
-        box.pack_start(srcLabel, False, True, 0)
+        label = Gtk.Label("Mirror:")
+        box.pack_start(label, False, True, 0)
         
         self.backups = Gtk.ComboBoxText.new()
         box.pack_start(self.backups, False, True, 0)
@@ -863,7 +870,7 @@ class MyWindow(Gtk.Window):
 
         page1 =  self.actionPage()
         page1.set_border_width(10)
-        self.notebook.append_page(page1, Gtk.Label('Do'))
+        self.notebook.append_page(page1, Gtk.Label('Backups'))
         
         page2 =  self.settingsPage()
         page2.set_border_width(10)
@@ -872,19 +879,40 @@ class MyWindow(Gtk.Window):
         #self.statusbar = Gtk.Statusbar()
         #self.statusbarContext = self.statusbar.get_context_id("backuper")
         #box.pack_start(self.statusbar, False, True, 0)
-        
+
+        self.notebook.connect("switch-page", self._notebookSwitched)
+
         
         separator = Gtk.Separator()
         box.pack_start(separator, False, True, 4)
+        
+        statusbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        statusbox.set_homogeneous(False)
+        
+        
         self.statusbar = Gtk.Label()
-        box.pack_start(self.statusbar, False, True, 0)
+        self.statusbar.set_margin_left(4)
+        self.statusbar.set_margin_bottom(4)
         
+        statusbox.pack_start(self.statusbar, False, True, 0)
         
+        box.pack_start(statusbox, False, True, 0)
+
+
+
+
+
+
+def end(widget, event):
+    widget._settingsFromPopulation()
+    Gtk.main_quit()
+    
+    
 # settings for last used files
 gsettings = Gio.Settings.new(GSCHEMA)
 #        setting.bind("show-desktop-icons", switch, "active", Gio.SettingsBindFlags.DEFAULT)
 win = MyWindow()
-win.connect("delete-event", Gtk.main_quit)
+win.connect("delete-event", end)
 win.show_all()
 
 # Populate

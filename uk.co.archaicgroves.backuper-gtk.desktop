@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Version=0.0.2
+Name=Backuper-gtk
+Comment=Incremental backups with rdiff-sync
+Encoding=UTF-8
+Categories=GTK;Development;Utility;
+Exec=backuper-gtk
+Icon=backuper-gtk
+Terminal=false
+StartupNotify=true

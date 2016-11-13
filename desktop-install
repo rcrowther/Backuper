@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# NB: unmodified MESON_BUILD_ROOT point to the top directory(?)
+bash ./schema-install
+
+cp "${MESON_SOURCE_ROOT}/backuper-gtk.py" "/usr/local/bin/backuper-gtk"
+
+cp "${MESON_SOURCE_ROOT}/icons/backuper-gtk16x16.png" "/usr/share/icons/hicolor/16x16/apps/backuper-gtk.png"
+cp "${MESON_SOURCE_ROOT}/icons/backuper-gtk48x48.png" "/usr/share/icons/hicolor/48x48/apps/backuper-gtk.png"
+cp "${MESON_SOURCE_ROOT}/icons/backuper-gtk.svg" "/usr/share/icons/hicolor/scalable/apps/backuper-gtk.svg"
+
+# NB: user-specific  ~/.local/share/applications has been a flop for me
+cp "${MESON_SOURCE_ROOT}/uk.co.archaicgroves.backuper-gtk.desktop" "/usr/share/applications/uk.co.archaicgroves.backuper-gtk.desktop"
+gtk-update-icon-cache /usr/share/icons/hicolor/

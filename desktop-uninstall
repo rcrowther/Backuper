@@ -1,0 +1,13 @@
+#!/bin/sh
+
+bash ./schema-uninstall
+
+rm "/usr/local/bin/backuper-gtk"
+
+rm "/usr/share/icons/hicolor/16x16/apps/backuper-gtk.png"
+rm "/usr/share/icons/hicolor/48x48/apps/backuper-gtk.png"
+rm "/usr/share/icons/hicolor/scalable/apps/backuper-gtk.svg"
+
+# NB: user-specific  ~/.local/share/applications has been a flop for me
+rm "/usr/share/applications/uk.co.archaicgroves.backuper-gtk.desktop"
+gtk-update-icon-cache /usr/share/icons/hicolor/
