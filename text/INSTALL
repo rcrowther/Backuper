@@ -1,14 +1,31 @@
 = Install
 
-== Requires
-Python3, GTK environment, rdiff-backup
-
-
-
 == Meson
-cd .../Backuper
+
+=== Debain repository
+python-pip3
+
+pip3 install meson
+
+==== Ninja
+Get ninja and install. Will need a modern 'ninja'. Use pre-builds for 
+64bit, 32bit users will need to build their own (currently).
+
+==== Steps
 mkdir build
 /usr/local/bin/meson.py build
 cd build
+
 sudo ninja schema-install
+
+or,
+
+sudo ninja desktop-install
+
+
+
+== Requires
+Python3, GTK environment, rdiff-backup
+
+rdiff-backup in Debain repositories
 
